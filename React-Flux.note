@@ -1,0 +1,43 @@
+**React w/ Flux pattern**
+
+Components --> Actions --> Dispatcher --> Stores --> Components
+
+Components
+    - import dependent components
+    - import store
+    - import actions as *
+    - constructor
+        * set state based on store
+    - componentWillMount
+        * ___Store.on('change', method)
+    - componentWillUnmount
+        * ___Store.removeListener('change', method)
+    - render
+    - *To avoid memory leaks remember to remove listeners on unmount. Component can call actions and store methods.*
+    
+Actions
+    - import dispatcher
+    - export various actions as functions
+        * dispatcher.dispatch({
+            type: SOME_ACTION,
+            more_fields,
+        })
+    - *Define actions here. This is the place for axios and other async requests.*
+
+Dispatcher
+    - imports Dispatcher from 'flux'
+    - exports new Dispatcher
+    - *Very simple. Only creates new Dispatcher for export.*
+    
+Stores
+    - import dispatcher
+    - import { EventEmitter } from 'events'
+    - extends EventEmitter
+    - constructor if defaults
+    - store methods: called in handleActions, also this.emit("change")
+    - handleActions(action)
+        * switch block w/ action types as cases that call store methods
+    - new ___Store
+    - dispatcher.register(___Store.handleActions.bind(___Store))
+    - exports store
+    - *Listens for and handles actions as they come in. Place to set default state and to operate on data.*
